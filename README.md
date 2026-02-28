@@ -3,6 +3,8 @@ Exercícios da disciplina eletiva de Programação Funcional
 
 Para criar um projeto em F# é necessário rodar no terminal o comando
 
+Gabarito de Referência: https://github.com/FabioAyresInsper/Insper-Funcional.git
+
 ```bash
 dotnet new console --language F# -o MeuProjeto
 cd MeuProjeto
