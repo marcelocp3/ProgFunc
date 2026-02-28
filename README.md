@@ -7,10 +7,34 @@ Para criar um projeto em F# é necessário rodar no terminal o comando
 dotnet new console --language F# -o MeuProjeto
 cd MeuProjeto
 ```
+
 Para testar se de fato o projeto foi, rodar no terminal dentro da pasta do projeto
 
 ```bash
 dotnet run
+```
+
+No terminal deve aparecer 
+
+```bash
+Hello from F#
+```
+
+Quando criar um arquivo novo dentro do projeto, é importante adicionar esse arquivo no compilador da mesma forma que Program.fs está adicionado. Caso o arquivo novo utilizar algo que está no Program.fs, é necessário que o Program.fs seja compilado primeiro, ou seja, esteja acima na lista.
+
+Quando testar no terminal um arquivo program.fs, declarar no topo deste algo como: 
+
+```fsharp
+module Program
+```
+
+No terminal: 
+
+```bash
+dotnet fsi
+> load "Program.fs";;
+> open Program;;
+> calcularHash 5 10;;
 ```
 
 ---
