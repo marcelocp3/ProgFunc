@@ -360,6 +360,87 @@ printfn "%s" mensagem  // Pi é aproximadamente 3.14
 
 ---
 
+### 21. Imutabilidade
+
+Imutabilidade é um dos pilares da programação funcional. Em F#, valores são **imutáveis por padrão**, ou seja, uma vez atribuídos, não podem ser alterados. Isso evita efeitos colaterais inesperados e torna o código mais previsível e fácil de testar.
+
+**Benefícios da imutabilidade:**
+- Elimina erros causados por mudanças de estado inesperadas.
+- Facilita a execução paralela e concorrente, pois não há estado compartilhado mutável.
+- Torna o raciocínio sobre o código mais simples.
+
+```fsharp
+// Valor imutável — não pode ser reatribuído
+let x = 10
+// x <- 20  // ERRO: x não é mutável
+
+// Para criar um "novo valor" com base no anterior, cria-se um novo binding
+let y = x + 5  // y = 15, x continua sendo 10
+
+// Records são imutáveis por padrão — para "alterar", cria-se uma cópia
+type Ponto = { X: int; Y: int }
+let p1 = { X = 1; Y = 2 }
+let p2 = { p1 with X = 10 }  // p1 não é alterado; p2 é um novo valor
+printfn "p1: (%d, %d)" p1.X p1.Y  // p1: (1, 2)
+printfn "p2: (%d, %d)" p2.X p2.Y  // p2: (10, 2)
+
+// Listas também são imutáveis
+let lista1 = [1; 2; 3]
+let lista2 = 0 :: lista1  // Nova lista; lista1 não é modificada
+printfn "%A" lista1  // [1; 2; 3]
+printfn "%A" lista2  // [0; 1; 2; 3]
+
+// Quando realmente necessário, use mutable
+let mutable contador = 0
+contador <- contador + 1
+printfn "Contador: %d" contador  // Contador: 1
+```
+
+---
+
+### 22. Funções Puras
+
+Uma **função pura** é aquela que:
+1. Sempre retorna o mesmo resultado para os mesmos argumentos (determinística).
+2. Não produz **efeitos colaterais** (não altera estado externo, não faz I/O, não lança exceções dependentes de estado, etc.).
+
+Em F#, o estilo funcional incentiva o uso de funções puras, tornando o código mais testável, reutilizável e fácil de entender.
+
+```fsharp
+// Função pura: mesmo input → mesmo output, sem efeitos colaterais
+let somar a b = a + b
+printfn "%d" (somar 3 5)  // Sempre 8
+
+// Função pura: transformação de dados sem alterar o original
+let dobrarLista lista = List.map (fun x -> x * 2) lista
+let numeros = [1; 2; 3]
+let dobrados = dobrarLista numeros
+printfn "%A" numeros   // [1; 2; 3]  — não foi alterado
+printfn "%A" dobrados  // [2; 4; 6]
+
+// Exemplo de função IMPURA (depende de estado externo / produz efeito colateral)
+let mutable total = 0
+let adicionarAoTotal x =
+    total <- total + x  // Efeito colateral: altera variável externa
+    total
+
+// Versão PURA equivalente (recebe o estado como parâmetro e retorna o novo estado)
+let adicionarPuro total x = total + x
+let novoTotal = adicionarPuro 0 5   // 5
+let novoTotal2 = adicionarPuro novoTotal 3  // 8
+printfn "Total: %d" novoTotal2  // Total: 8
+
+// Funções puras combinadas com pipe operator
+let resultado =
+    [1; 2; 3; 4; 5]
+    |> List.filter (fun x -> x % 2 <> 0)  // [1; 3; 5]
+    |> List.map (fun x -> x * x)           // [1; 9; 25]
+    |> List.sum                             // 35
+printfn "Resultado: %d" resultado  // Resultado: 35
+```
+
+---
+
 ### Referências
 
 - [Documentação oficial do F#](https://learn.microsoft.com/pt-br/dotnet/fsharp/)
